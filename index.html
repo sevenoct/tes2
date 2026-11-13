@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><link rel="icon" href="assets/favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Star-Delta Starting &amp; Dynamic Braking with PLC — Final Project Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="proposal.css"></head>
+<body>
+<div class="amb" aria-hidden="true"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span><div class="wm"><svg class="waves" id="w" viewBox="0 0 3600 600" preserveAspectRatio="none"></svg></div></div>
+<header class="bar"><div class="bar-glass glass" aria-hidden="true"></div>
+<a class="mono" href="#top" aria-label="Back to top"><img src="assets/hasan-ramdani-logo.png" alt="Hasan Ramdani logo"></a>
+<button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav" aria-label="Open menu"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path class="i-open" d="M4 7h16M4 12h16M4 17h16"/><path class="i-close" d="M6 6l12 12M18 6L6 18"/></svg></button>
+<nav id="nav" aria-label="Primary"><span class="nav-ind" aria-hidden="true"></span><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#design">Design</a><a href="#parts">Components</a><a href="#gallery">Gallery</a><a href="#lit">Literature</a><a href="#test">Testing</a><a href="#plan">Plan &amp; budget</a></nav></header>
+<main id="top">
+<section class="hero"><div class="emb glass rv in"><img src="assets/hasan-ramdani-emblem.webp" alt="Hasan Ramdani emblem"></div>
+<div class="chips"><span class="chip">Final Project Proposal · 2026</span><span class="chip">D4 Electrical Engineering</span><span class="chip cc"><img src="assets/politeknik-caltex-riau.png" alt="Politeknik Caltex Riau"></span></div>
+<h1>Design &amp; Build of a Star-Delta Starting and Dynamic Braking System for a 3-Phase Induction Motor Using a PLC</h1>
+<p class="lead">A PLC-based motor control system that softens the starting current with star-delta switching, then stops the motor quickly and safely by injecting DC into the stator, all sequenced automatically with timers and interlocks.</p>
+<p class="lead" style="margin-top:12px;font-size:1rem"><b style="color:#fff">Muhamad Hasan Ramdani</b> · Student ID 2320305028</p>
+<div class="btns"><a class="btn pri" href="#how">See how it works</a><a class="btn gh" href="#plan">Schedule &amp; budget</a></div>
+<div class="stats">
+<div class="stat glass rv"><b>5–7×</b><span>Direct-on-line starting current vs. rated current</span></div>
+<div class="stat glass rv"><b>1/√3</b><span>Winding voltage in star, which cuts starting current and torque</span></div>
+<div class="stat glass rv"><b>28 s → 0.85 s</b><span>Stop time, coasting vs. DC braking in the cited reference study</span></div>
+<div class="stat glass rv"><b>Rp 6.085M</b><span>Estimated total build cost, 18 line items</span></div>
+</div></section>
+
+<section id="problem"><p class="k">Background</p><h2>Two weaknesses of the induction motor</h2>
+<p class="lead">Three-phase induction motors are rugged, simple and cheap to maintain, but they are hard on the grid when starting and slow to stop. Both problems are addressed here in one PLC-controlled system.</p>
+<div class="grid">
+<article class="card glass rv"><h3>Starting</h3><p>At start-up the motor can draw 5–7× its rated current. This can cause voltage dips, heat the winding insulation and shorten motor life when repeated. Star-delta starting begins in star (reduced voltage) and switches to delta once the motor is up to speed.</p></article>
+<article class="card glass rv"><h3>Stopping</h3><p>Coasting relies only on friction and inertia, so stopping takes long and is uncontrolled. Injecting DC current into the stator creates a stationary magnetic field that opposes rotor rotation and converts kinetic energy into heat.</p></article>
+<article class="card glass rv"><h3>The gap</h3><p>Star-delta and dynamic braking are each common in industry, but combining both under a single PLC control system is still rarely covered in educational settings.</p></article>
+</div>
+<div class="grid">
+<article class="card glass rv"><p class="k">Problem statement</p><ul>
+<li>How long does the motor take to stop under braking?</li>
+<li>Which key indicators confirm a safe star-to-delta transition?</li>
+<li>How can star-delta and dynamic braking logic be implemented in a PLC program that runs automatically and in sequence?</li>
+<li>How can starting current, transition time and braking time be measured and analysed?</li></ul></article>
+<article class="card glass rv"><p class="k">Scope limits</p><ul>
+<li>Star-delta starting and dynamic braking with a PLC as the central controller only</li>
+<li>Three-phase induction motors only (no single-phase or DC motors)</li>
+<li>DC injected into the stator through a diode rectifier circuit</li>
+<li>Performance tests run under no-load conditions</li></ul></article>
+</div>
+<div class="grid">
+<article class="card glass rv"><p class="k">Objectives</p><ul><li>Explain how star-delta starting and dynamic braking work in a 3-phase induction motor</li><li>Apply a PLC as the main controller for starting, transition to delta and braking, automatically and safely</li></ul></article>
+<article class="card glass rv"><p class="k">Expected benefits</p><ul><li>More stable operation: starting and stopping run in the right order without overstressing the motor</li><li>Fewer operational faults and longer motor life through more regular, precise, easily monitored control</li></ul></article>
+</div></section>
+
+<section id="how"><p class="k">Operating sequence</p><h2>Step through the control logic</h2>
+<p class="lead">Select a stage to see which contactors the PLC energises. KM1 = main, KM2 = star, KM3 = delta, KM4 = dynamic braking.</p>
+<div class="sim glass" id="sim"><div class="steps" id="steps" role="tablist"></div>
+<div class="kms" id="kms"></div><p id="desc" style="min-height:5.2em" aria-live="polite"></p></div>
+<div class="bk rv" aria-label="Block diagram"><span>3-phase AC supply</span><i>→</i><span>MCB / MCCB</span><i>→</i><span>Main contactor</span><i>→</i><span>Star / Delta contactors</span><i>→</i><span>Motor</span></div>
+<div class="bk rv"><span>24 V DC power supply</span><i>→</i><span>PB Start · PB Stop · E-Stop</span><i>→</i><span>PLC logic / timers</span><i>→</i><span>Braking contactor</span><i>→</i><span>Rectifier</span><i>→</i><span>Stator (DC)</span></div><div class="gal two"><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Three-phase induction motor"><img loading="lazy" src="assets/three-phase-induction-motor.webp" alt="Three-phase induction motor"></button><figcaption><b>Fig 2.1 · Three-phase induction motor</b><span>The load under control: rugged and low-maintenance, but it draws 5–7× rated current at start-up.</span></figcaption></figure><figure class="fg glass rv "><button class="ph" data-z aria-label="Enlarge: Star-delta winding connections"><img loading="lazy" src="assets/star-delta-winding-connections.webp" alt="Star-delta winding connections"></button><figcaption><b>Fig 2.2 · Star-delta winding connections</b><span>In star each winding sees 1/√3 of line voltage; in delta it sees full line voltage.</span></figcaption></figure><figure class="fg glass rv "><button class="ph" data-z aria-label="Enlarge: Dynamic braking principle"><img loading="lazy" src="assets/dynamic-braking-principle.webp" alt="Dynamic braking principle"></button><figcaption><b>Fig 2.3 · Dynamic braking principle</b><span>A diode bridge injects DC into the stator, producing a static field that opposes rotor motion.</span></figcaption></figure></div></section>
+
+<section id="design"><p class="k">Design</p><h2>Power, control and hardware</h2>
+<div class="grid">
+<article class="card glass rv"><div class="num">1</div><h3>Power circuit</h3><p>Three-phase supply passes through a 3-phase MCB and MCCB to the main contactor (MC MAIN). Star (MC STAR) and delta (MC DELTA) contactors reconfigure the motor windings. A thermal overload relay sits in series with the motor, and an ammeter with a selector switch monitors the R, S and T phase currents.</p></article>
+<article class="card glass rv"><div class="num">2</div><h3>Control circuit</h3><p>A Schneider TM221C16R PLC, powered from a 24 V DC supply, reads the Start, Stop and Emergency Stop inputs and drives four contactor coils. Timer T1 sets the star-to-delta changeover, timer T2 sets the braking duration, and interlocks prevent contactors from overlapping.</p></article>
+<article class="card glass rv"><div class="num">3</div><h3>Braking circuit</h3><p>When the braking contactor closes, AC is fed to a diode bridge rectifier. The resulting DC flows into two stator terminals, creating a static magnetic field that produces braking torque. After T2 expires the contactor opens so DC does not keep heating the winding.</p></article>
+<article class="card glass rv"><div class="num">4</div><h3>Mechanical layout</h3><p>The inside panel has three DIN-rail tiers: MCB and PLC, four contactors with the overload relay, and MCCB with the power supply. Terminal blocks sit at the bottom. The front door carries R/S/T indicator lamps, the ammeter, ON/OFF lamps, an emergency stop and PB ON / PB OFF buttons.</p></article>
+</div><div class="gal bigf"><figure class="fg glass rv "><button class="ph" data-z aria-label="Enlarge: System block diagram"><img loading="lazy" src="assets/system-block-diagram.webp" alt="System block diagram"></button><figcaption><b>Fig 3.1 · System block diagram</b><span>AC supply, 24 V control supply, PB Start/Stop/E-Stop, PLC logic/timer, star-delta and braking contactors, rectifier and motor.</span></figcaption></figure></div><div class="split"><figure class="fg glass rv"><button class="ph" data-z><img loading="lazy" src="assets/system-flowchart.webp" alt="System flowchart"></button><figcaption><b>Flowchart · Fig 3.2</b><span>Initialisation to motor stop.</span></figcaption></figure><div class="card glass rv"><h3>Flowchart walk-through</h3><ol class="ol"><li>Initialise: all outputs OFF, wait for Start</li><li>Start → KM1 main + KM2 star; timer T1 runs</li><li>T1 done → KM2 off, KM3 delta on; motor runs</li><li>Stop → KM3 and KM1 off; safety delay</li><li>KM4 braking + KM2 on; DC injected via diodes; timer T2 runs</li><li>T2 done → KM4 off; motor stopped; end</li></ol></div></div><figure class="fg glass rv wide"><button class="ph" data-z><img loading="lazy" src="assets/power-and-control-wiring-diagram.webp" alt="Power and control wiring diagram"></button><figcaption><b>Wiring diagram · Fig 3.3</b><span>Power and control circuit. Tap to open full size and scroll.</span><em class="lg"><span>MCB 3-phase</span><span>MCB 1-phase</span><span>Ammeter + selector (R/S/T)</span><span>TM221C16R PLC</span><span>24 V DC supply</span><span>MC MAIN</span><span>MC STAR</span><span>MC DELTA</span><span>MC braking + diode bridge</span><span>OLR overload relay</span><span>Induction motor U1 V1 W1 / W2 V2 U2</span></em></figcaption></figure><div class="gal bigf"><figure class="fg glass rv "><button class="ph" data-z aria-label="Enlarge: Panel mechanical layout"><img loading="lazy" src="assets/panel-mechanical-layout.webp" alt="Panel mechanical layout"></button><figcaption><b>Fig 3.4 · Panel mechanical layout</b><span>Left: inside the panel (MCB and PLC; four contactors and overload relay; MCCB and power supply; terminal blocks). Right: front door with R/S/T lamps, ammeter, ON/OFF lamps, emergency stop, PB ON/OFF.</span></figcaption></figure></div></section>
+
+<section id="parts"><p class="k">Components</p><h2>What the system is built from</h2>
+<div class="grid">
+<article class="card glass rv"><h3>PLC</h3><p>Industrial computer with CPU, memory, I/O modules, power supply and programming device. It runs the ladder logic that sequences the contactors. Chosen model: Schneider Modicon M221 TM221C16R (16 I/O, relay output).</p></article>
+<article class="card glass rv"><h3>Diode rectifier</h3><p>Stud diodes (full-wave bridge) convert AC to DC for braking. Selected on forward current, peak inverse voltage and heat dissipation, with a heatsink where needed.</p></article>
+<article class="card glass rv"><h3>Protection</h3><p>MCB (overcurrent and short circuit), MCCB, and a thermal overload relay whose bimetal element trips the contactor via its NC auxiliary contact.</p></article>
+<article class="card glass rv"><h3>Contactors</h3><p>Four Mitsubishi SN-11 (220 V coil) contactors: main, star, delta and braking. Coil, main contacts and auxiliary contacts (NO latching, NC for indication).</p></article>
+<article class="card glass rv"><h3>Operator interface</h3><p>NO green Start button, NC red Stop button, a locking emergency stop mushroom button, and pilot lamps for status and fault indication.</p></article>
+</div></section>
+
+<section id="gallery"><p class="k">Component gallery</p><h2>Parts used in the system</h2><p class="lead">Figures from the proposal. Tap any image to enlarge.</p><div class="gal"><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Programmable Logic Controller"><img loading="lazy" src="assets/programmable-logic-controller.webp" alt="Programmable Logic Controller"></button><figcaption><b>Fig 2.4 · Programmable Logic Controller</b><span>Schneider Modicon M221 TM221C16R: runs the ladder logic, timers T1/T2 and interlocks.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Stud power diode"><img loading="lazy" src="assets/stud-power-diode.webp" alt="Stud power diode"></button><figcaption><b>Fig 2.5 · Stud power diode</b><span>Bridge rectifier element that converts AC to DC for braking; chosen by forward current and PIV.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: 3-phase Miniature Circuit Breaker"><img loading="lazy" src="assets/3-phase-miniature-circuit-breaker.webp" alt="3-phase Miniature Circuit Breaker"></button><figcaption><b>Fig 2.6 · 3-phase Miniature Circuit Breaker</b><span>Protects the supply against overcurrent and short circuits on all three phases.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Push buttons"><img loading="lazy" src="assets/push-buttons.webp" alt="Push buttons"></button><figcaption><b>Fig 2.7 · Push buttons</b><span>Green NO for START, red NC for STOP; momentary action needs a latching rung in the ladder.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Magnetic contactor"><img loading="lazy" src="assets/magnetic-contactor.webp" alt="Magnetic contactor"></button><figcaption><b>Fig 2.8 · Magnetic contactor</b><span>Coil A1/A2, main contacts, plus NO (13-14) and NC (21-22) auxiliary contacts for latching and indication.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Thermal overload relay"><img loading="lazy" src="assets/thermal-overload-relay.webp" alt="Thermal overload relay"></button><figcaption><b>Fig 2.9 · Thermal overload relay</b><span>Bimetal protection against overload; its NC contact drops the contactors when it trips.</span></figcaption></figure><figure class="fg glass rv "><button class="ph cut" data-z aria-label="Enlarge: Pilot lamps"><img loading="lazy" src="assets/pilot-lamps.webp" alt="Pilot lamps"></button><figcaption><b>Fig 2.10 · Pilot lamps</b><span>Indicate supply present, running state and faults on the panel front.</span></figcaption></figure></div></section>
+
+<section id="lit"><p class="k">Literature review</p><h2>Prior research</h2>
+<div class="tw glass rv"><table><thead><tr><th>Researchers</th><th>Study</th><th>Key finding</th></tr></thead><tbody>
+<tr><td>Kusuma et al., 2022</td><td>Design PLC on Induction Motors Using Star-Delta With Manual and Automatic Technique</td><td>Automatic PLC control gives better stability against inrush current than manual control and reduces human error in the star-to-delta change.</td></tr>
+<tr><td>Hartawan &amp; Galina, 2022</td><td>Omron CP1E PLC in an Industrial Star-Delta Motor Control System</td><td>PLC replaced conventional control with higher protection via a manual motor starter, and logic is easier to modify.</td></tr>
+<tr><td>Hidayatullah &amp; Binoto, 2022</td><td>Dynamic Braking Circuit Using Time Delay Relay</td><td>DC injection cut stopping time from 28 s (coasting) to 0.85 s.</td></tr>
+<tr><td>Alfariki et al., 2024</td><td>Star-Delta Starting With HMI-Based PLC vs. Starting Current</td><td>PLC + HMI enables real-time current monitoring, remote control up to 20 m and suppresses current overshoot during transition (7.5 kW motor).</td></tr>
+</tbody></table></div></section>
+
+<section id="test"><p class="k">Method &amp; testing</p><h2>How the system will be validated</h2>
+<p class="lead">Methodology: literature study → design (components, PLC ladder diagram, wiring, budget) → testing → analysis of results with recommendations.</p>
+<div class="grid tests">
+<article class="card glass rv"><h3>1 · Design realisation</h3><p>Verify the built panel matches the mechanical, power and control design and PLC logic.</p></article>
+<article class="card glass rv"><h3>2 · Functional test</h3><p>Check the start sequence from standstill, timed star-to-delta change and braking activation; each PLC output must energise the correct contactor.</p></article>
+<article class="card glass rv"><h3>3 · Star-delta starting</h3><p>Measure starting current in star and after changeover to delta, confirming no excessive current spike or mechanical disturbance.</p></article>
+<article class="card glass rv"><h3>4 · Dynamic braking</h3><p>Measure stopping time, braking stability and braking contactor response.</p></article>
+<article class="card glass rv"><h3>5 · PLC timing</h3><p>Confirm programmed delays (T1 and T2) match design and cause no contactor overlap.</p></article>
+<article class="card glass rv"><h3>6 · Reliability &amp; safety</h3><p>Confirm safe, stable operation over a period of time, including emergency stop behaviour.</p></article>
+</div></section>
+
+<section id="plan"><p class="k">Schedule &amp; budget</p><h2>Timeline and cost estimate</h2>
+<div class="tw glass rv"><div class="gantt" id="gantt"></div></div>
+<p style="margin-top:12px;font-size:.9375rem;color:var(--ink3)">Planned phases shown: guidance and proposal writing from Nov 2025, proposal defence in Jan 2026. Later phases (build, testing, report, final defence) run through 2026.</p>
+<div class="tw glass rv"><table><thead><tr><th>#</th><th>Item</th><th class="r">Qty</th><th class="r">Unit price</th><th class="r">Total</th></tr></thead><tbody id="bud"></tbody>
+<tfoot><tr><td colspan="4">Total estimate</td><td class="r">Rp 6,085,000</td></tr></tfoot></table></div></section>
+
+<section id="refs"><p class="k">References</p><h2>Selected sources</h2>
+<ul class="refs glass card rv"><li>Kusuma et al. (2022). Design PLC on Induction Motors Using Star-Delta With Manual and Automatic Technique.</li><li>Hartawan, F. Y. &amp; Galina, M. (2022). Implementation of PLC Omron CP1E in a Star-Delta Induction Motor Control System for Industrial Needs.</li><li>Hidayatullah, A. et al. (2022). Planning of a Dynamic Braking Circuit for a 3-Phase, One-Direction AC Induction Motor Using Time Delay.</li><li>Alfariki, M. Z., Mubarok, R. &amp; Murdiantoro, R. A. (2024). Analysis of Star-Delta Starting With HMI-Based PLC on Starting Current.</li><li>Sartika, L. et al. (2025). Comparative analysis of 3-phase induction motor starting current. Jurnal Eltek, 23(2), 46–52.</li><li>Nofiansyah et al. (2022). Operation 3 Phase Induction Motor 1 Kw Star Delta System Using Smart Phone. IJRVOCAS, 2(3), 56–60.</li><li>Kurniawan, H. (2023). Journal control system, 5–9.</li><li>Jamaaluddin, J. et al. (2021). Analysis of Overcurrent Safety in Miniature Circuit Breaker. J. Electrical Technology UMY, 5(2), 68–73.</li><li>Puspita, T. (2023). Thermal Overload Relay (TOR) as a Motor Protection System.</li></ul></section>
+</main>
+<footer>Final Project Proposal · Muhamad Hasan Ramdani · D4 Electrical Engineering, Politeknik Caltex Riau · 2026</footer>
+<script src="proposal.js"></script></body></html>
